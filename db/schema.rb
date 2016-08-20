@@ -15,7 +15,7 @@ ActiveRecord::Schema.define(version: 20151212021023) do
 
   create_table "arguments", force: :cascade do |t|
     t.text     "statement"
-    t.integer  "validity"
+    t.decimal  "validity"
     t.integer  "topic_id",                         null: false
     t.datetime "created_at",                       null: false
     t.datetime "updated_at",                       null: false
@@ -32,7 +32,7 @@ ActiveRecord::Schema.define(version: 20151212021023) do
 
   create_table "bitcoin_addresses", force: :cascade do |t|
     t.string   "bitcoin_address"
-    t.integer  "balance",         limit: 8, default: 0
+    t.decimal  "balance",         default: 0.0
     t.datetime "updated_at"
   end
 
