@@ -1,0 +1,12 @@
+p#notice = notice
+
+p
+  strong Topic:
+  = @topic.topic
+p
+  strong Due:
+  = @topic.due
+
+= link_to 'Edit', edit_topic_path(@topic)
+'|
+= link_to 'Back', topics_path
