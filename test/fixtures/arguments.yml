@@ -3,7 +3,9 @@
 one:
   statement: MyText
   validity: 1
+  topic_id: 
 
 two:
   statement: MyText
   validity: 1
+  topic_id: 

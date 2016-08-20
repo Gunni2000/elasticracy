@@ -12,9 +12,9 @@ class SignaturesController < ApplicationController
           @argument.update_validity
           # redirect_to [@argument], notice: "Your vote of #{@signature.bitcoin_address.balance} is accepted"
           # format.html { redirect_to [@argument, @signature], notice: 'Signature was successfully created.' }
-          flash[:notice] = "Your vote of #{@signature.bitcoin_address.balance/1e8} btc is accepted!"
+          flash[:notice] = "Your vote of #{@signature.bitcoin_address.balance/1e8} XEL is accepted!"
           flash.keep(:notice)
-          url = argument_url(@argument.id) + (@signature.negation ? "?doubt=1" : "")
+          url = argument_url(@argument.id)
           format.js   { render :create, :locals => {redirection_url: url, exception: nil} }
           # format.json { render :show, status: :created, location: @signature }
         else
@@ -24,6 +24,8 @@ class SignaturesController < ApplicationController
           # format.json { render json: @signature.errors, status: :unprocessable_entity }
         end
       rescue => e
+       logger.error e.message
+       e.backtrace.each { |line| logger.error line }
        format.js {render :create_fail, :locals => {error_message: "Signature submission failed (non-unique signature?)" , exception: e}}
       end    
 

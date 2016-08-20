@@ -10,17 +10,17 @@ class BitcoinAddress < ActiveRecord::Base
   end
 
   def update_balance
-    res = request_balance("http://www.fuzzbawls.pw/explore/HOdlcoin/api_fetch.php?method=address_immature_balance&address=#{self.bitcoin_address}")
+    res = request_balance("http://localhost:8080/?address=#{self.bitcoin_address}")
   
     if res!=false
-      if ( (new_balance=res.to_i) >= 0) and (new_balance != self.balance)
+      if ( (new_balance=res.to_f) >= 0) and (new_balance != self.balance)
         update_attribute :balance, new_balance
         arguments.each{|a|a.update_validity}
       else
         touch :updated_at # push it to the end of the queue
       end
     else
-      log.warn "failed to retrieve balance for bitcoin address #{self.bitcoin_address}"
+      log.warn "failed to retrieve XEL balance for bitcoin address #{self.bitcoin_address}"
     end
   end
 

@@ -1,5 +1,5 @@
-- model_class = Argument
-- title "Of the Nuts, For the Nuts and By the Nuts."
+- model_class = Topic
+- title "Collaborative Decision Making"
 
 / AddThis Button BEGIN
 .addthis_toolbox.addthis_default_style.addthis_32x32_style.pull-right addthis:data_track_clickback="false" addthis:data_track_addressbar="false" addthis:ui_language="#{I18n.locale}" addthis:url="http://bitcoinocracy.com"
@@ -13,32 +13,28 @@
 
 h1 =t '.title', :default => model_class.model_name.human.pluralize.titleize
 
-.lead Nutocracy allows HOlders to cast their nuts in favor and against motions.
+.lead Elasticracy allows holders of XEL to decide on important questions of Elastic Project.
 
-.lead Read about <a href="https://www.reddit.com/r/Hodl/comments/4qrfny/nutocracy_of_the_nuts_for_the_nuts_and_by_the/" target="_blank"> how it works</a> on Reddit
-
-.lead
-  = link_to t('.new'), new_argument_path
-  |  or check the existing ones:
 
 div role="navigation"
   ul.nav.nav-tabs
-    li class="#{action_name=='active' ? 'active' : ''}" =link_to "Active", active_arguments_path
-    li class="#{action_name=='newest' ? 'active' : ''}" =link_to "Newest", newest_arguments_path
-    li class="#{action_name=='controversial' ? 'active' : ''}" =link_to "Controversial", controversial_arguments_path
-    li class="#{action_name=='decided' ? 'active' : ''}" =link_to "Threshold Reached", decided_arguments_path
+    li class="#{action_name=='active' ? 'active' : ''}" =link_to "Active and Open Decisions", active_arguments_path
+    li class="#{action_name=='past' ? 'active' : ''}" =link_to "Past Decisions", past_arguments_path
 
 table.table
-  - @arguments.each do |argument|
+  - @topics.each do |topic|
     tr
-      td style="text-align:center;"
-        div
-          = link_to "", "#{argument_path(argument)}", class: "btn btn-xs fa fa-arrow-up", title: "Supported by #{btc_human(argument.pros_sum)}"
-        div class="#{argument.validity < 0 ? 'bg-danger' : (argument.validity > 0 ? 'bg-success' : '')}"
-          = "#{btc_human(argument.validity,'')}"
-        div
-          = link_to "", "#{argument_path(argument)}?doubt=1", class: "btn btn-xs fa fa-arrow-down", title: "Opposed by #{btc_human(argument.cons_sum)}"
-      td style='vertical-align:middle' 
-        = link_to "#{argument.statement}", argument_path(argument), class: "lead"
+      td style="text-align:center; background: #F8E0E0" colspan="2"
+        .p <b>Topic of Decision:</b> #{topic.topic} | <b>Vote Online Until:</b> #{topic.due}
+    - topic.arguments.order('validity DESC').each do |argument|
+      tr
+        td style="text-align:center;"
+          div
+            = link_to "", "#{argument_path(argument)}", class: "btn btn-xs fa fa-arrow-up", title: "Supported by #{btc_human(argument.pros_sum)}"
+          div class="#bg-success"
+            = "#{btc_human(argument.validity,'')}"
+         
+        td style='vertical-align:middle' 
+          = link_to "#{argument.statement}", argument_path(argument), class: "lead"
 
-= paginate @arguments, :theme => 'twitter-bootstrap-3'
+= paginate @topics, :theme => 'twitter-bootstrap-3'

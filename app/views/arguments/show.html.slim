@@ -1,32 +1,26 @@
 - model_class = Argument
 - title @argument.statement
+h1
+ = @argument.topic.topic
 .well
     code
       h1#argument
-       = @is_doubt ? @argument.con_statement : @argument.pro_statement
-
-    .row
-      .col-md-2
-        button.btn.btn-default.btn-lg.btn-info#toggle_button type="button"
-          span.fa.fa-refresh aria-hidden="true" 
-            |  Do not HOdl
-
-      .col-md-1
-        span.lead
-          |  OR  
-      .col-md-9
-        =form_tag(argument_signatures_path(@argument.id), {remote:true, id:"signature_form"}) do |f|
-          =text_area("signature", "signature", {style:"font-size:1.5em;width:100%;", placeholder:"Please copy the above statement, sign it with your HOdlcoin address and paste the signature here", class:"submit_on_edit"})
-          =button_tag "Submit", class:"btn btn-lg btn-success pull-right"
-          .alert.alert-warning
-            | Warning: 
-            a href="https://www.reddit.com/r/btc/comments/4mhjh3/psa_bitcoinocracycom_signatures_expose_your/" rel="nofollow" target="_blank" Bitcoin signatures expose your public keys
-            |  (that shouldn't be a problem until 
-            a href="https://en.wikipedia.org/wiki/Elliptic_Curve_Digital_Signature_Algorithm" rel="nofollow" target="_blank" ECDSA
-            |  is broken). Moreover address reuse with a faulty random number generator 
-            a href="http://www.nilsschneider.net/2013/01/28/recovering-bitcoin-private-keys.html" rel="nofollow" target="_blank" may leak your private keys
-            |.
-          =hidden_field("signature", "negation", {value: @is_doubt, autocomplete: false})
+       = @argument.pro_statement
+- if (@argument.topic.due > DateTime.now)
+	.p style="padding:15px"
+	    .row
+	        =form_tag(argument_signatures_path(@argument.id), {remote:true, id:"signature_form"}) do |f|
+	          =text_area("signature", "signature", {style:"font-size:1.5em;width:100%;height: 60px;padding: 10px;", placeholder:"Please copy the above statement, sign it with the BTC address you used for your donation and paste the signature here", class:"submit_on_edit"})
+	          =button_tag "Submit", class:"btn btn-lg btn-success pull-right"
+	          .alert.alert-warning style="width: 100%"
+	            | Warning: 
+	            a href="https://www.reddit.com/r/btc/comments/4mhjh3/psa_bitcoinocracycom_signatures_expose_your/" rel="nofollow" target="_blank" Bitcoin signatures expose your public keys
+	            |  (that shouldn't be a problem until 
+	            a href="https://en.wikipedia.org/wiki/Elliptic_Curve_Digital_Signature_Algorithm" rel="nofollow" target="_blank" ECDSA
+	            |  is broken). Moreover address reuse with a faulty random number generator 
+	            a href="http://www.nilsschneider.net/2013/01/28/recovering-bitcoin-private-keys.html" rel="nofollow" target="_blank" may leak your private keys
+	            |.
+	          =hidden_field("signature", "negation", {value: @is_doubt, autocomplete: false})
 
     div#signature_status style='display:none'
 
@@ -35,7 +29,7 @@
     p 
       h2
         .pull-left
-          = model_class.human_attribute_name(:validity) + ': ' + btc_human(@argument.validity)
+          = 'Sum of all votes: ' + btc_human(@argument.pros_sum)
 
 
         / AddThis Button BEGIN
@@ -52,13 +46,7 @@
 
 
 .row
-    .col-md-6.bg-success
-      h3 #{btc_human(@argument.pros_sum)} #{percent_human(@argument.pros_share)} HOdl
-    .col-md-6.bg-danger
-      h3 #{btc_human(@argument.cons_sum)} #{percent_human(@argument.cons_share)} Do not HOdl
-
-.row
-    - [@argument.pros, @argument.cons].each_with_index do |addresses, i|
+    - [@argument.pros].each_with_index do |addresses, i|
       .col-md-6     
         table class="table #{i==0 ? 'bg-success' : 'bg-danger'}"
           - addresses.each do |address|
@@ -69,6 +57,4 @@
                 =btc_human address.balance
 
 input type='hidden' name='pro_statement' id='pro_statement' value=@argument.pro_statement
-input type='hidden' name='con_statement' id='con_statement' value=@argument.con_statement
-
 

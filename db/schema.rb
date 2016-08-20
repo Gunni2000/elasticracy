@@ -15,9 +15,10 @@ ActiveRecord::Schema.define(version: 20151212021023) do
 
   create_table "arguments", force: :cascade do |t|
     t.text     "statement"
-    t.integer  "validity",   limit: 8, default: 0
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.integer  "validity"
+    t.integer  "topic_id",                         null: false
+    t.datetime "created_at",                       null: false
+    t.datetime "updated_at",                       null: false
     t.string   "slug"
     t.integer  "pros_sum",   limit: 8, default: 0
     t.integer  "cons_sum",   limit: 8, default: 0
@@ -27,6 +28,7 @@ ActiveRecord::Schema.define(version: 20151212021023) do
 
   add_index "arguments", ["slug"], name: "index_arguments_on_slug", unique: true
   add_index "arguments", ["statement"], name: "index_arguments_on_statement", unique: true
+  add_index "arguments", ["topic_id"], name: "index_arguments_on_topic_id"
 
   create_table "bitcoin_addresses", force: :cascade do |t|
     t.string   "bitcoin_address"
@@ -61,5 +63,15 @@ ActiveRecord::Schema.define(version: 20151212021023) do
   add_index "signatures", ["argument_id"], name: "index_signatures_on_argument_id"
   add_index "signatures", ["bitcoin_address_id"], name: "index_signatures_on_bitcoin_address_id"
   add_index "signatures", ["signature"], name: "unique_signature_primary", unique: true
+
+  create_table "topics", force: :cascade do |t|
+    t.text     "topic"
+    t.datetime "due"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string   "slug"
+  end
+
+  add_index "topics", ["slug"], name: "index_topics_on_slug", unique: true
 
 end

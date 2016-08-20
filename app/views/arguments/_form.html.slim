@@ -1,9 +1,9 @@
-= form_for @argument, html: { class: "form form-vertical argument" } do |f|
+= simple_form_for @argument, html: { class: "form form-vertical argument" } do |f|
   .form-group
-    p Please keep the statement short and simple, e. g. "God exists".
-    p When users vote on it, the prefix "We HOdl " or "We do not HOdl " will be added depending on their choice.
+    p Please keep the statement short and simple, e. g. "500 Million" or "Next Month".
     .controls
       = f.text_field :statement, :class => 'form-control', placeholder: "Your statement"
+      = f.association :topic, :include_blank => false, :label_method => lambda { |topic| "#{topic.topic}" } 
     = f.error_span(:statement)
   = f.submit "Submit", :class => 'btn btn-primary'
   '

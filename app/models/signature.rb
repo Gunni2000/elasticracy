@@ -11,11 +11,7 @@ class Signature < ActiveRecord::Base
   # scope :con, where is_negation?: true
 
   def message
-    if negation?
-  		argument.con_statement
-  	else
   		argument.pro_statement
-  	end
   end
 
   def signature_address
@@ -27,8 +23,8 @@ class Signature < ActiveRecord::Base
       if btc_addr = BitcoinAddress.find_by_bitcoin_address(signature_address)
         self.bitcoin_address_id = btc_addr.id
       else
-        res = Net::HTTP.get(URI.parse("http://www.fuzzbawls.pw/explore/HOdlcoin/api_fetch.php?method=address_immature_balance&address=#{signature_address}"))
-        if (balance=res.to_i) > 0
+        res = Net::HTTP.get(URI.parse("http://localhost:8080/?address=#{signature_address}"))
+        if (balance=res.to_f) > 0
           btc_addr = BitcoinAddress.create({bitcoin_address: signature_address, balance: balance })
           self.bitcoin_address_id = btc_addr.id
         end

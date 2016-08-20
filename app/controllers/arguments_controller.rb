@@ -1,53 +1,25 @@
 class ArgumentsController < ApplicationController
   before_action :set_argument, only: [:show, :edit, :update, :destroy]
 
-  # GET /arguments
-  # GET /arguments.json
+
+
   def index
-    controversial
-  end
-
-
-  def decided
-    @arguments = Argument.where("pros_sum > ?",500000000000000).page params[:page]
-    render :index
-  end
-
-  def newest
-    @arguments = Argument.all.order("created_at desc").page params[:page]
-    render :index
+    active
   end
 
   def active
-    @arguments = Argument.all.order("updated_at desc, all_sum desc").page params[:page]
+    @topics = Topic.all.where("due > datetime('now')").order("due asc").page params[:page]
     render :index
   end
 
-  def valid
-    @arguments = Argument.all.order("validity desc").page params[:page]
+  def past
+    @topics = Topic.all.where("due <= datetime('now')").order("due asc").page params[:page]
     render :index
   end
-
-  def invalid
-    @arguments = Argument.all.order("validity asc").page params[:page]
-    render :index
-  end
-
-  def popular
-    @arguments = Argument.all.order("all_sum desc").page params[:page]
-    render :index
-  end
-
-  def controversial
-    @arguments = Argument.all.order("min_sum desc").page params[:page]
-    render :index
-  end
-
 
   # GET /arguments/1
   # GET /arguments/1.json
   def show
-    @is_doubt = !params[:doubt].nil?
   end
 
   # GET /arguments/new
@@ -62,7 +34,7 @@ class ArgumentsController < ApplicationController
   # POST /arguments
   # POST /arguments.json
   def create
-    @argument = Argument.new(argument_params.permit(:statement))
+    @argument = Argument.new(argument_params)
 
     respond_to do |format|
       if @argument.save
@@ -100,13 +72,13 @@ class ArgumentsController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
+      # Use callbacks to share common setup or constraints between actions.
     def set_argument
       @argument = Argument.friendly.find(params[:id])
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def argument_params
-      params[:argument]
+      params.require(:argument).permit(:topic_id, :statement)
     end
 end
