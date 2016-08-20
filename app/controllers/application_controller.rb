@@ -4,7 +4,12 @@ class ApplicationController < ActionController::Base
   protect_from_forgery with: :exception
 
   before_filter :update_bitcoin_balance # since we don't yet have a background task, we need this hack :(
-
+  protected
+    def authenticate
+      authenticate_or_request_with_http_basic do |username, password|
+        username == USER_ID && password == PASSWORD
+      end
+    end
   def update_bitcoin_balance    
     return if rand > 0.9 # don't slowdown 90% of requests
 

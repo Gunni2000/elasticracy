@@ -1,4 +1,9 @@
 module ApplicationHelper 
+
+  def logged_in?
+   not request.authorization.nil?
+  end
+
 	def btc_human(satoshies, separator=' ')
 		"%.8f#{separator} XEL" % (1.0*satoshies.to_f)
 	end

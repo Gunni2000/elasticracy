@@ -1,6 +1,6 @@
 class ArgumentsController < ApplicationController
   before_action :set_argument, only: [:show, :edit, :update, :destroy]
-
+  before_filter :authenticate, :except => [:index, :active, :past, :show]
 
 
   def index
