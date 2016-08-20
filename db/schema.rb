@@ -16,14 +16,14 @@ ActiveRecord::Schema.define(version: 20151212021023) do
   create_table "arguments", force: :cascade do |t|
     t.text     "statement"
     t.decimal  "validity"
-    t.integer  "topic_id",                         null: false
-    t.datetime "created_at",                       null: false
-    t.datetime "updated_at",                       null: false
+    t.integer  "topic_id",                 null: false
+    t.datetime "created_at",               null: false
+    t.datetime "updated_at",               null: false
     t.string   "slug"
-    t.integer  "pros_sum",   limit: 8, default: 0
-    t.integer  "cons_sum",   limit: 8, default: 0
-    t.integer  "all_sum",    limit: 8, default: 0
-    t.integer  "min_sum",    limit: 8, default: 0
+    t.decimal  "pros_sum",   default: 0.0
+    t.decimal  "cons_sum",   default: 0.0
+    t.decimal  "all_sum",    default: 0.0
+    t.decimal  "min_sum",    default: 0.0
   end
 
   add_index "arguments", ["slug"], name: "index_arguments_on_slug", unique: true
