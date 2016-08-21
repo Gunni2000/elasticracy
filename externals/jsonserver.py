@@ -38,12 +38,13 @@ else:
                         pbl = BitcoinPublicKey(pub)
                         tmpmap[pub] = pbl.address()
                         addy = tmpmap[pub];
-                        if addy == givenadd:
-                            bal = float(x["mir_amount"])
-                        balmap[addy] = float(x["mir_amount"])
+                      
+                        if addy not in balmap:
+                            balmap[addy] = 0
+                        balmap[addy] += float(x["mir_amount"])
 
-                except:
-                        pass
+                except Exception as e:
+                    print e
 
                 output = open('pickled_tmpmap.dat', 'wb+')
                 pickle.dump(tmpmap, output)
